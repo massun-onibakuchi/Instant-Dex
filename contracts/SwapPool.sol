@@ -15,5 +15,12 @@ contract SwapPool is rToken {
         WETH = _WETH;
     }
 
+    function mint(address to) {
+        uint256 balance0 = IERC20(token0).balanceOf(address(this));
+        uint256 balance1 = IERC20(token1).balanceOf(address(this));
+    }
 
+    function burn(address to) {
+        
+    }
 }
