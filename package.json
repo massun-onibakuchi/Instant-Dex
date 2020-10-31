@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "waffle",
-    "test": "export NODE_ENV=test && mocha "
+    "test": " export NODE_ENV=test && mocha ",
+    "tsc": "./node_modules/.bin/tsc --resolveJsonModule "
   },
   "author": "",
   "license": "ISC",
