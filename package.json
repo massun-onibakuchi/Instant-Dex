@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "waffle",
+    "build": "hardhat compile",
+    "deploy": "hardhat run",
     "test": " export NODE_ENV=test && mocha ",
     "tsc": "./node_modules/.bin/tsc --resolveJsonModule "
   },

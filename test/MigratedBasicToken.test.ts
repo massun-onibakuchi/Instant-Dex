@@ -13,6 +13,8 @@ describe('BasicToken', () => {
 
   beforeEach(async () => {
     token = await deployContract(wallet, BasicToken, [1000]);
+    // const BasicToken = await ethers.getContractFactory("BasicToken");
+    // token = await BasicToken.deploy(1000);
   });
 
   it('Assigns initial balance', async () => {

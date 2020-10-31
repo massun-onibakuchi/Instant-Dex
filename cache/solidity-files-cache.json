@@ -5,7 +5,7 @@
       "lastModificationDate": 1604117535812,
       "sourceName": "hardhat/console.sol",
       "solcConfig": {
-        "version": "0.6.9",
+        "version": "0.6.12",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -38,7 +38,7 @@
       "lastModificationDate": 1604108498232,
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
-        "version": "0.6.9",
+        "version": "0.6.12",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -76,7 +76,7 @@
       "lastModificationDate": 1604108498230,
       "sourceName": "@openzeppelin/contracts/GSN/Context.sol",
       "solcConfig": {
-        "version": "0.6.9",
+        "version": "0.6.12",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -109,7 +109,7 @@
       "lastModificationDate": 1604108498239,
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
-        "version": "0.6.9",
+        "version": "0.6.12",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -142,7 +142,7 @@
       "lastModificationDate": 1604108498243,
       "sourceName": "@openzeppelin/contracts/math/SafeMath.sol",
       "solcConfig": {
-        "version": "0.6.9",
+        "version": "0.6.12",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -175,7 +175,7 @@
       "lastModificationDate": 1604108498229,
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
-        "version": "0.6.9",
+        "version": "0.6.12",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -208,7 +208,7 @@
       "lastModificationDate": 1604120419829,
       "sourceName": "contracts/Greeter.sol",
       "solcConfig": {
-        "version": "0.6.9",
+        "version": "0.6.12",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -243,7 +243,7 @@
       "lastModificationDate": 1604120437470,
       "sourceName": "contracts/BasicToken.sol",
       "solcConfig": {
-        "version": "0.6.9",
+        "version": "0.6.12",
         "settings": {
           "optimizer": {
             "enabled": true,
