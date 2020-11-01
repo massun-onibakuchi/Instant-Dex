@@ -8,19 +8,37 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 contract SwapPool is rToken {
     using SafeMath for uint256;
 
-    address public token0;
-    address public token1;
+    address public token;
+    uint112 private reserve; // uses single storage slot, accessible via getReserves
 
-    constructor(address _WETH) public {
-        WETH = _WETH;
+    uint256 private unlocked = 1;
+    modifier lock() {
+        require(unlocked == 1, "UniswapV2: LOCKED");
+        unlocked = 0;
+        _;
+        unlocked = 1;
     }
 
-    function mint(address to) {
-        uint256 balance0 = IERC20(token0).balanceOf(address(this));
-        uint256 balance1 = IERC20(token1).balanceOf(address(this));
+    function getReserve() public view returns (uint112 _reserve) {
+        _reserve = reserve;
     }
 
-    function burn(address to) {
-        
+    // update reserves
+    function _update(uint256 balance, uint112 _reserve) private {
+        require(balance <= uint112(-1), "UniswapV2: OVERFLOW");
+        reserve = uint112(balance);
+        emit Sync(reserve);
     }
+
+    function mint(address to) external lock returns (uint256 liquidity) {
+        uint112 _reserve = getReserves();
+        uint256 balance = IERC20(token).balanceOf(address(this));
+        uint256 amount = balance.sub(_reserve);
+        /* 小数の計算 */
+        liquidity = 20;
+        _mint(to, liquidity);
+        _update(balance, _reserve);
+    }
+
+    function burn(address to) external lock returns (uint256 liquidity) {}
 }
