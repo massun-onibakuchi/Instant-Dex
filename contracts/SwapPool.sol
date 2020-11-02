@@ -78,7 +78,7 @@ contract SwapPool is ISwapPool, rToken {
     }
 
     // update reserves
-    function _update(uint256 balance, uint112 _reserve) private {
+    function _update(uint256 balance) private {
         require(balance <= uint112(-1), "OVERFLOW");
         reserve = uint112(balance);
         emit Sync(reserve);
@@ -95,7 +95,7 @@ contract SwapPool is ISwapPool, rToken {
         require(liquidity > 0, "UniswapV2: INSUFFICIENT_LIQUIDITY_MINTED");
 
         _mint(to, liquidity);
-        _update(balance, _reserve);
+        _update(balance);
         emit Mint(msg.sender, amount);
     }
 
@@ -114,7 +114,7 @@ contract SwapPool is ISwapPool, rToken {
         _safeTransfer(token, to, amount);
         balance = IERC20(_token).balanceOf(address(this));
 
-        _update(balance, _reserve);
+        _update(balance);
         emit Burn(msg.sender, amount);
     }
 }
