@@ -7,7 +7,8 @@
     "build": "hardhat compile",
     "deploy": "hardhat run",
     "test": " export NODE_ENV=test && mocha ",
-    "tsc": "./node_modules/.bin/tsc --resolveJsonModule "
+    "tsc": "./node_modules/.bin/tsc --resolveJsonModule ",
+    "lint":"./node_modules/solhint/solhint.js ./contracts/**.sol "
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +25,7 @@
   },
   "dependencies": {
     "@types/chai": "^4.2.14",
-    "@types/mocha": "^8.0.3"
+    "@types/mocha": "^8.0.3",
+    "solhint": "^3.3.1"
   }
 }
