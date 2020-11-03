@@ -1,22 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.6.12;
+pragma solidity ^0.6.0;
 
 import "./SwapPool.sol";
-
-interface IFactory {
-    function createPool(address _token) external returns (address pool);
-    function getPool(address _token) external view returns (address pair);
-}
+import "./interfaces/IFactory.sol";
 
 contract Factory is IFactory {
     mapping(address => address) private tokenToPool;
     
     constructor() public {}
 
-    function createPool(address _token) external returns (address pool) {
+    function createPool(address _token) external override returns (address pool) {
         require(tokenToPool[_token] != address(0), "POOL_EXIST");
         bytes memory bytecode = type(SwapPool).creationCode;
-        bytes32 salt = keccak256(_token);
+        bytes32 salt = keccak256(abi.encodePacked(_token));
         assembly {
             pool := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
@@ -24,7 +20,7 @@ contract Factory is IFactory {
         tokenToPool[_token] = pool;
     }
 
-    function getPool(address _token) external view returns (address pool) {
+    function getPool(address _token) external override view returns (address pool) {
         pool = tokenToPool[_token];
     }
 }

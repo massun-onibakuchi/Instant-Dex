@@ -1,65 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.6.12;
+pragma solidity ^0.6.0;
 
 import "./rToken.sol";
 import "./libraries/TransferHelper.sol";
+import "./interfaces/ISwapPool.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-
-interface ISwapPool {
-    event Sync(uint112 reserve);
-    event Mint(address indexed sender, uint256 amount);
-    event Burn(address indexed sender, uint256 amount);
-
-    function getReserve() public view returns (uint112 _reserve);
-
-    function _update(uint256 balance, uint112 _reserve) private;
-
-    function mint(address to) external lock returns (uint256 liquidity);
-
-    function burn(address to) external lock returns (uint256 liquidity);
-
-    function name() external pure returns (string memory);
-
-    function symbol() external pure returns (string memory);
-
-    function decimals() external pure returns (uint8);
-
-    function totalSupply() external view returns (uint256);
-
-    function balanceOf(address _owner) external view returns (uint256 balance);
-
-    function transfer(address _to, uint256 _value)
-        external
-        returns (bool success);
-
-    function transferFrom(
-        address _from,
-        address _to,
-        uint256 _value
-    ) external returns (bool success);
-
-    function approve(address _spender, uint256 _value)
-        external
-        returns (bool success);
-
-    function allowance(address _owner, address _spender)
-        external
-        view
-        returns (uint256 remaining);
-
-    event Transfer(address indexed _from, address indexed _to, uint256 _value);
-    event Approval(
-        address indexed _owner,
-        address indexed _spender,
-        uint256 _value
-    );
-}
 
 contract SwapPool is ISwapPool, rToken {
     using SafeMath for uint256;
 
     address public token;
-    uint112 private reserve; // uses single storage slot, accessible via getReserves
+    uint112 private reserve; // uses single storage slot, accessible via getReserve
+    address public factory;
+    bytes4 private constant SELECTOR = bytes4(
+        keccak256(bytes("transfer(address,uint256)"))
+    );
 
     uint256 private unlocked = 1;
     modifier lock() {
@@ -69,23 +24,51 @@ contract SwapPool is ISwapPool, rToken {
         unlocked = 1;
     }
 
+    constructor() public {
+        factory = msg.sender;
+    }
+
     event Sync(uint112 reserve);
     event Mint(address indexed sender, uint256 amount);
     event Burn(address indexed sender, uint256 amount);
 
-    function getReserve() public view returns (uint112 _reserve) {
-        _reserve = reserve;
-    }
-
     // update reserves
-    function _update(uint256 balance) private {
+    function _update(uint256 balance) private override {
         require(balance <= uint112(-1), "OVERFLOW");
         reserve = uint112(balance);
         emit Sync(reserve);
     }
 
-    function mint(address to) external lock returns (uint256 liquidity) {
-        uint112 _reserve = getReserves();
+    function _safeTransfer(
+        address token,
+        address to,
+        uint256 value
+    ) private override {
+        (bool success, bytes memory data) = token.call(
+            abi.encodeWithSelector(SELECTOR, to, value)
+        );
+        require(
+            success && (data.length == 0 || abi.decode(data, (bool))),
+            "UniswapV2: TRANSFER_FAILED"
+        );
+    }
+
+    function getReserve() public override view returns (uint112 _reserve) {
+        _reserve = reserve;
+    }
+
+    function initialize(address _token) external override {
+        require(msg.sender == factory, "UniswapV2: FORBIDDEN");
+        token = _token;
+    }
+
+    function mint(address to)
+        external
+        override
+        lock
+        returns (uint256 liquidity)
+    {
+        uint112 _reserve = getReserve();
         uint256 balance = IERC20(token).balanceOf(address(this));
         uint256 amount = balance.sub(_reserve);
 
@@ -99,8 +82,8 @@ contract SwapPool is ISwapPool, rToken {
         emit Mint(msg.sender, amount);
     }
 
-    function burn(address to) external lock returns (uint256 amount) {
-        uint112 _reserve = getReserves();
+    function burn(address to) external override lock returns (uint256 amount) {
+        // uint112 _reserve = getReserve();
         address _token = token; // gas savings
 
         uint256 balance = IERC20(_token).balanceOf(address(this));
