@@ -33,7 +33,7 @@ contract SwapPool is ISwapPool, rToken {
     event Burn(address indexed sender, uint256 amount);
 
     // update reserves
-    function _update(uint256 balance) private override {
+    function _update(uint256 balance) private {
         require(balance <= uint112(-1), "OVERFLOW");
         reserve = uint112(balance);
         emit Sync(reserve);
@@ -43,7 +43,7 @@ contract SwapPool is ISwapPool, rToken {
         address token,
         address to,
         uint256 value
-    ) private override {
+    ) private {
         (bool success, bytes memory data) = token.call(
             abi.encodeWithSelector(SELECTOR, to, value)
         );

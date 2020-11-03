@@ -13,7 +13,6 @@ interface ISwapPool is IERC20 {
 
     function getReserve() external view returns (uint112 _reserve);
 
-    function _update(uint256 balance) external;
 
     function mint(address to) external returns (uint256 liquidity);
 
@@ -21,9 +20,11 @@ interface ISwapPool is IERC20 {
 
     function initialize(address _token) external;
 
-    function _safeTransfer(
-        address token,
-        address to,
-        uint256 value
-    ) external;
+    // function _update(uint256 balance) external;
+    
+    // function _safeTransfer(
+    //     address token,
+    //     address to,
+    //     uint256 value
+    // ) external;
 }
