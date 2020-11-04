@@ -5,30 +5,30 @@ import "./libraries/TransferHelper.sol";
 import "./interfaces/IWETH.sol";
 import "./interfaces/IFactory.sol";
 import "./interfaces/ISwapPool.sol";
+import "./SwapPool.sol";
 import "./rToken.sol";
 
 contract Periphery {
-    /* immutable */
-    address public WETH;
-    /* immutable */
-    address public factory;
+    address public immutable WETH;
+    address public immutable factory;
 
     constructor(address _WETH, address _factory) public {
         WETH = _WETH;
         factory = _factory;
     }
 
-    // receive() external payable {
-    //     // only accept ETH via fallback from the WETH contract
-    //     assert(msg.sender == WETH);
-    // }
+    receive() external payable {
+        // only accept ETH via fallback from the WETH contract
+        assert(msg.sender == WETH);
+    }
 
     function addLiquidity(
         address token,
         address to,
         uint256 amount
     ) external returns (uint256 liquidity) {
-        address pool = IFactory(factory).getPool(token);
+        // address pool = IFactory(factory).getPool(token);
+        address pool = poolFor(factory, WETH);
         require(pool != address(0), "INVALID_TOKEN_ADDRESS");
 
         TransferHelper.safeTransferFrom(token, msg.sender, pool, amount);
@@ -85,7 +85,7 @@ contract Periphery {
                         hex"ff",
                         _factory,
                         keccak256(abi.encodePacked(_token)),
-                        hex"96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f" // init code hash
+                        keccak256(abi.encodePacked(type(SwapPool).creationCode))
                     )
                 )
             )
