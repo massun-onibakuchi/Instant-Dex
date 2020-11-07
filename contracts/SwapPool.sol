@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.6.0;
 
-import "./rToken.sol";
+import "./RToken.sol";
 import "./libraries/TransferHelper.sol";
 import "./interfaces/ISwapPool.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-contract SwapPool is ISwapPool, rToken {
+contract SwapPool is ISwapPool, RToken {
     using SafeMath for uint256;
 
-    address public token;
     uint112 private reserve; // uses single storage slot, accessible via getReserve
+    address public token;
     address public factory;
     bytes4 private constant SELECTOR = bytes4(
         keccak256(bytes("transfer(address,uint256)"))
@@ -40,16 +40,16 @@ contract SwapPool is ISwapPool, rToken {
     }
 
     function _safeTransfer(
-        address token,
+        address _token,
         address to,
         uint256 value
     ) private {
-        (bool success, bytes memory data) = token.call(
+        (bool success, bytes memory data) = _token.call(
             abi.encodeWithSelector(SELECTOR, to, value)
         );
         require(
             success && (data.length == 0 || abi.decode(data, (bool))),
-            "UniswapV2: TRANSFER_FAILED"
+            "TRANSFER_FAILED"
         );
     }
 
@@ -58,7 +58,7 @@ contract SwapPool is ISwapPool, rToken {
     }
 
     function initialize(address _token) external override {
-        require(msg.sender == factory, "UniswapV2: FORBIDDEN");
+        require(msg.sender == factory, "ONLY_FACTORY");
         token = _token;
     }
 
@@ -75,7 +75,7 @@ contract SwapPool is ISwapPool, rToken {
         /* 小数の計算 */
         //ここではliquidity =  amount とする
         liquidity = amount;
-        require(liquidity > 0, "UniswapV2: INSUFFICIENT_LIQUIDITY_MINTED");
+        require(liquidity > 0, "INSUFFICIENT_LIQUIDITY_MINTED");
 
         _mint(to, liquidity);
         _update(balance);
@@ -92,7 +92,7 @@ contract SwapPool is ISwapPool, rToken {
         /* 小数の計算 */
 
         amount = liquidity;
-        require(amount > 0, "UniswapV2: INSUFFICIENT_LIQUIDITY_BURNED");
+        require(amount > 0, "INSUFFICIENT_LIQUIDITY_BURNED");
         _burn(address(this), liquidity);
         _safeTransfer(token, to, amount);
         balance = IERC20(_token).balanceOf(address(this));

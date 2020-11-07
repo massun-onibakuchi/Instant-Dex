@@ -6,7 +6,7 @@ import "./interfaces/IWETH.sol";
 import "./interfaces/IFactory.sol";
 import "./interfaces/ISwapPool.sol";
 import "./SwapPool.sol";
-import "./rToken.sol";
+import "./RToken.sol";
 
 contract Periphery {
     address public immutable WETH;

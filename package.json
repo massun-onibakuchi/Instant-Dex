@@ -1,14 +1,15 @@
 {
   "name": "waffle-tutorial",
   "version": "1.0.0",
-  "description": "",
+  "description": "Instant DEX",
   "main": "index.js",
   "scripts": {
     "build": "hardhat compile",
+    "compile": "hardhat compile",
     "deploy": "hardhat run",
     "test": " export NODE_ENV=test && mocha ",
     "tsc": "./node_modules/.bin/tsc --resolveJsonModule ",
-    "lint":"./node_modules/solhint/solhint.js ./contracts/**.sol "
+    "lint:sol":"./node_modules/solhint/solhint.js \"contracts/**/*.sol\" "
   },
   "author": "",
   "license": "ISC",

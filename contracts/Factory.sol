@@ -17,8 +17,8 @@ contract Factory is IFactory {
         returns (address pool)
     {
         require(tokenToPool[_token] != address(0), "POOL_EXIST");
-        bytes32 create2Salt = keccak256(abi.encodePacked(_token));
-        pool = address(new SwapPool{salt: create2Salt}());
+        bytes32 salt = keccak256(abi.encodePacked(_token));
+        pool = address(new SwapPool{salt: salt}());
         ISwapPool(pool).initialize(_token);
         tokenToPool[_token] = pool;
     }
