@@ -1,15 +1,22 @@
-import { expect, use } from 'chai';
-import { Contract } from 'ethers';
-const { waffle } = require("hardhat");
+import { expect } from 'chai';
+import { waffle, ethers } from "hardhat";
+import { Contract, Signer } from "ethers";
 const { deployContract } = waffle;
+const privier = waffle.provider;
+import BasicToken from '../artifacts/contracts/BasicToken.sol/BasicToken.json';
+
 
 describe('BasicToken', () => {
-  const [wallet, walletTo] =waffle.provider.getWallets();
+  const [wallet, walletTo] = privier.getWallets();
   let token: Contract;
 
+
   beforeEach(async () => {
-    const BasicToken = await ethers.getContractFactory("BasicToken");
-    token = await BasicToken.deploy(1000);
+    const [owner, addr1] = await ethers.getSigners();
+    let accounts: Signer[] = await ethers.getSigners();
+    token = await deployContract(wallet, BasicToken, [1000]);
+    // const BasicToken = await ethers.getContractFactory("BasicToken");
+    // token = await BasicToken.deploy(1000);
     // const BasicToken = await ethers.getContractFactory("BasicToken");
     // token = await BasicToken.deploy(1000);
   });
