@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import { Signer } from "ethers";
 
-describe("Token", function () {
+describe("Sample", function () {
   let accounts: Signer[];
 
 

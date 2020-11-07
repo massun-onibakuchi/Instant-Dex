@@ -6,7 +6,8 @@
   "scripts": {
     "build": "hardhat compile",
     "deploy": "hardhat run",
-    "test": " export NODE_ENV=test && mocha test/**/*.js",
+    "mocha": " export NODE_ENV=test && mocha test/**/*.js",
+    "test": "hardhat test",
     "tsc": "./node_modules/.bin/tsc ",
     "lint:sol": "./node_modules/solhint/solhint.js \"contracts/**/*.sol\" "
   },
