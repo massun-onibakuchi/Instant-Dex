@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "hardhat compile",
+    "compile": "hardhat compile",
     "deploy": "hardhat run",
-    "mocha": " export NODE_ENV=test && mocha test/**/*.js",
     "test": "hardhat test",
     "tsc": "./node_modules/.bin/tsc ",
     "lint:sol": "./node_modules/solhint/solhint.js \"contracts/**/*.sol\" "
