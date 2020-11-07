@@ -16,8 +16,12 @@ async function main() {
   // We get the contract to deploy
   const BasicToken = await hre.ethers.getContractFactory("BasicToken");
   const token = await BasicToken.deploy(1000);
-
   await token.deployed();
+
+  const TransferHelper = await hre.ethers.getContractFactory("TransferHelper");
+  const transferLib = await TransferHelper.deploy(1000);
+  await transferLib.deployed();
+
 
   console.log("Greeter deployed to:", token.address);
 }

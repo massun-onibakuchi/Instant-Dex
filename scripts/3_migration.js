@@ -22,11 +22,13 @@ async function main() {
   const periphery = await Periphery.deploy(wethAddr, factoryAddr);
   await Periphery.deployed();
 
-  const SwapPool = await hre.ethers.getContractFactory("SwapPool");
-  const swapool = await SwapPool.deploy();
-  await SwapPool.deployed();
+  // const SwapPool = await hre.ethers.getContractFactory("SwapPool");
+  // const swapPool = await SwapPool.deploy();
+  // await SwapPool.deployed();
 
-  console.log("Greeter deployed to:", factory.address);
+  console.log("Factory deployed to:", factory.address);
+  console.log("Periphery deployed to:", periphery.address);
+  // console.log("SwapPool deployed to:", swapPool.address);
 }
 
 

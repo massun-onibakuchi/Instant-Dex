@@ -38,13 +38,13 @@ describe('BasicToken', () => {
       .to.be.reverted;
   });
 
-  it('Calls totalSupply on BasicToken contract', async () => {
-    await token.totalSupply();
-    expect('totalSupply').to.be.calledOnContract(token);
-  });
+  // it('Calls totalSupply on BasicToken contract', async () => {
+  //   await token.totalSupply();
+  //   expect('totalSupply').to.be.calledOnContract(token);
+  // });
 
-  it('Calls balanceOf with sender address on BasicToken contract', async () => {
-    await token.balanceOf(wallet.address);
-    expect('balanceOf').to.be.calledOnContractWith(token, [wallet.address]);
-  });
+  // it('Calls balanceOf with sender address on BasicToken contract', async () => {
+  //   await token.balanceOf(wallet.address);
+  //   expect('balanceOf').to.be.calledOnContractWith(token, [wallet.address]);
+  // });
 });

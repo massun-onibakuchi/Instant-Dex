@@ -1,18 +1,15 @@
 import { expect, use } from 'chai';
 import { Contract } from 'ethers';
-import { MockProvider, solidity } from 'ethereum-waffle';
 const { waffle } = require("hardhat");
 const { deployContract } = waffle;
-import BasicToken from '../build/BasicToken.json';
-
-use(solidity);
 
 describe('BasicToken', () => {
-  const [wallet, walletTo] = new MockProvider().getWallets();
+  const [wallet, walletTo] =waffle.provider.getWallets();
   let token: Contract;
 
   beforeEach(async () => {
-    token = await deployContract(wallet, BasicToken, [1000]);
+    const BasicToken = await ethers.getContractFactory("BasicToken");
+    token = await BasicToken.deploy(1000);
     // const BasicToken = await ethers.getContractFactory("BasicToken");
     // token = await BasicToken.deploy(1000);
   });

@@ -204,41 +204,6 @@
         "Address"
       ]
     },
-    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/Greeter.sol": {
-      "lastModificationDate": 1604120419829,
-      "sourceName": "contracts/Greeter.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "hardhat/console.sol"
-      ],
-      "versionPragmas": [
-        "^0.6.9"
-      ],
-      "artifacts": [
-        "Greeter"
-      ]
-    },
     "/Users/masudashouta/ethereum/waffle-tutorial/contracts/libraries/TransferHelper.sol": {
       "lastModificationDate": 1604127271067,
       "sourceName": "contracts/libraries/TransferHelper.sol",
@@ -490,41 +455,6 @@
         "Factory"
       ]
     },
-    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/RToken.sol": {
-      "lastModificationDate": 1604748534380,
-      "sourceName": "contracts/RToken.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
-      ],
-      "versionPragmas": [
-        "^0.6.0"
-      ],
-      "artifacts": [
-        "RToken"
-      ]
-    },
     "/Users/masudashouta/ethereum/waffle-tutorial/contracts/SwapPool.sol": {
       "lastModificationDate": 1604749766073,
       "sourceName": "contracts/SwapPool.sol",
@@ -561,6 +491,76 @@
       ],
       "artifacts": [
         "SwapPool"
+      ]
+    },
+    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/Greeter.sol": {
+      "lastModificationDate": 1604751713777,
+      "sourceName": "contracts/Greeter.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.6.12"
+      ],
+      "artifacts": [
+        "Greeter"
+      ]
+    },
+    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/RToken.sol": {
+      "lastModificationDate": 1604748534380,
+      "sourceName": "contracts/RToken.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.6.0"
+      ],
+      "artifacts": [
+        "RToken"
       ]
     }
   }
