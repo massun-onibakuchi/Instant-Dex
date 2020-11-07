@@ -49,4 +49,3 @@ describe('BasicToken', () => {
         chai_1.expect('balanceOf').to.be.calledOnContractWith(token, [wallet.address]);
     });
 });
-//# sourceMappingURL=MigratedBasicToken.test.js.map

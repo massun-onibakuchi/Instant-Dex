@@ -1,0 +1,4 @@
+{
+    "require": "hardhat/register/files",
+    "timeout": 20000
+}

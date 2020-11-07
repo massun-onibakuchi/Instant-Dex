@@ -23,17 +23,6 @@ const config = {
             url: "http://127.0.0.1:8545"
         },
         hardhat: {},
-        rinkeby: {
-        // url: "https://rinkeby.infura.io/v3/" + PROJECT_ID,
-        // accounts: [privateKey1, privateKey2]
-        // accounts: {
-        //   mnemonic:"",
-        //   path:"",
-        //   initialIndex:0,
-        //   count:10
-        // }
-        //https://hardhat.org/config/#hd-wallet-config
-        }
     },
     solidity: {
         compilers: [
@@ -56,4 +45,3 @@ const config = {
     }
 };
 exports.default = config;
-//# sourceMappingURL=hardhat.config.js.map

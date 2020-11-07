@@ -28,17 +28,17 @@ const config: HardhatUserConfig = {
     },
     hardhat: {
     },
-    rinkeby: {
-      // url: "https://rinkeby.infura.io/v3/" + PROJECT_ID,
-      // accounts: [privateKey1, privateKey2]
-      // accounts: {
-      //   mnemonic:"",
-      //   path:"",
-      //   initialIndex:0,
-      //   count:10
-      // }
-      //https://hardhat.org/config/#hd-wallet-config
-    }
+    // rinkeby: {
+    // url: "https://rinkeby.infura.io/v3/" + PROJECT_ID,
+    // accounts: [privateKey1, privateKey2]
+    // accounts: {
+    //   mnemonic:"",
+    //   path:"",
+    //   initialIndex:0,
+    //   count:10
+    // }
+    //https://hardhat.org/config/#hd-wallet-config
+    // }
   },
   solidity: {
     compilers: [

@@ -11,4 +11,3 @@ describe("Token", function () {
         // Do something with the accounts
     });
 });
-//# sourceMappingURL=sample.test.js.map

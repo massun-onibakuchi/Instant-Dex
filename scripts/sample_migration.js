@@ -12,4 +12,3 @@ main()
     console.error(error);
     process.exit(1);
 });
-//# sourceMappingURL=sample_migration.js.map
