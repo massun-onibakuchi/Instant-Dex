@@ -1,10 +1,9 @@
 import { expect } from 'chai';
-import { waffle} from "hardhat";
-import { Contract } from "ethers";  
+import { waffle, ethers } from "hardhat";
+import { Contract } from "ethers";
 import { BytesLike, getCreate2Address, keccak256, solidityKeccak256 } from 'ethers/lib/utils';
 
 import SwapPool from '../artifacts/contracts/SwapPool.sol/SwapPool.json';
-import { getContractFactory } from '@nomiclabs/hardhat-ethers/dist/src/helpers';
 
 describe('Factory', () => {
   const provider = waffle.provider;

@@ -13,13 +13,9 @@ describe('BasicToken', () => {
 
   beforeEach(async () => {
     const [owner, addr1] = await ethers.getSigners();
-    let accounts: Signer[] = await ethers.getSigners();
+    // let accounts: Signer[] = await ethers.getSigners();
     token = await deployContract(wallet, BasicToken, [1000]);
     await token.deployed();
-    // const BasicToken = await ethers.getContractFactory("BasicToken");
-    // token = await BasicToken.deploy(1000);
-    // const BasicToken = await ethers.getContractFactory("BasicToken");
-    // token = await BasicToken.deploy(1000);
   });
 
   it('Assigns initial balance', async () => {
