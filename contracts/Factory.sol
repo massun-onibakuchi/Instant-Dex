@@ -8,7 +8,7 @@ import "./interfaces/IFactory.sol";
 contract Factory is IFactory {
     mapping(address => address) private tokenToPool;
 
-    // constructor() public {}
+    event PoolCreated(address indexed token, address indexed pool);
 
     // https://solidity.readthedocs.io/en/v0.6.12/control-structures.html#creating-contracts-via-new
     function createPool(address _token)
@@ -16,11 +16,12 @@ contract Factory is IFactory {
         override
         returns (address pool)
     {
-        require(tokenToPool[_token] != address(0), "POOL_EXIST");
+        require(tokenToPool[_token] == address(0), "POOL_EXIST");
         bytes32 salt = keccak256(abi.encodePacked(_token));
         pool = address(new SwapPool{salt: salt}());
         ISwapPool(pool).initialize(_token);
         tokenToPool[_token] = pool;
+        emit PoolCreated(_token, pool);
     }
 
     function getPool(address _token)

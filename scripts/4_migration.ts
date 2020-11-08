@@ -22,6 +22,10 @@ async function main() {
     const periphery = await Periphery.deploy(weth.address, factory.address);
     await periphery.deployed();
 
+    console.log('factory.address :>> ', factory.address);
+    console.log('weth.address :>> ', weth.address);
+    console.log('transferLib.address :>> ', transferLib.address);
+    console.log('periphery.address :>> ', periphery.address);
 }
 
 main()

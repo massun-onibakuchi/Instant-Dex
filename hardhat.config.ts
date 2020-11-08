@@ -46,6 +46,24 @@ const config: HardhatUserConfig = {
       {
         version: "0.6.12",
         settings: {
+          "outputSelection": {
+            "*": {
+            "*": [
+                "evm.bytecode.object",
+                "evm.deployedBytecode.object",
+                "abi",
+                "evm.bytecode.sourceMap",
+                "evm.deployedBytecode.sourceMap",
+                "metadata"
+              ],
+              // "": [
+              //   "ast" // Enable the AST output of every single file.
+              // ]
+            },
+            "def": {
+              "*": ["evm.bytecode.object"]
+            }
+          },
           optimizer: {
             enabled: true,
             runs: 200
