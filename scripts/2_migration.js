@@ -18,7 +18,7 @@ async function main() {
   const token = await BasicToken.deploy(1000);
   await token.deployed();
 
-  console.log("Greeter deployed to:", token.address);
+  console.log("BasicToken deployed to:", token.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

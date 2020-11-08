@@ -305,81 +305,6 @@
         "IFactory"
       ]
     },
-    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/BasicToken.sol": {
-      "lastModificationDate": 1604748432097,
-      "sourceName": "contracts/BasicToken.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
-      ],
-      "versionPragmas": [
-        "^0.6.9"
-      ],
-      "artifacts": [
-        "BasicToken"
-      ]
-    },
-    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/Periphery.sol": {
-      "lastModificationDate": 1604748502584,
-      "sourceName": "contracts/Periphery.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./libraries/TransferHelper.sol",
-        "./interfaces/IWETH.sol",
-        "./interfaces/IFactory.sol",
-        "./interfaces/ISwapPool.sol",
-        "./SwapPool.sol",
-        "./RToken.sol"
-      ],
-      "versionPragmas": [
-        "^0.6.0"
-      ],
-      "artifacts": [
-        "Periphery"
-      ]
-    },
     "/Users/masudashouta/ethereum/waffle-tutorial/contracts/interfaces/ISwapPool.sol": {
       "lastModificationDate": 1604748502584,
       "sourceName": "contracts/interfaces/ISwapPool.sol",
@@ -418,81 +343,6 @@
         "ISwapPool"
       ]
     },
-    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/Factory.sol": {
-      "lastModificationDate": 1604747938363,
-      "sourceName": "contracts/Factory.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./SwapPool.sol",
-        "./interfaces/ISwapPool.sol",
-        "./interfaces/IFactory.sol"
-      ],
-      "versionPragmas": [
-        "^0.6.0"
-      ],
-      "artifacts": [
-        "Factory"
-      ]
-    },
-    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/SwapPool.sol": {
-      "lastModificationDate": 1604749766073,
-      "sourceName": "contracts/SwapPool.sol",
-      "solcConfig": {
-        "version": "0.6.12",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./RToken.sol",
-        "./libraries/TransferHelper.sol",
-        "./interfaces/ISwapPool.sol",
-        "@openzeppelin/contracts/math/SafeMath.sol"
-      ],
-      "versionPragmas": [
-        "^0.6.0"
-      ],
-      "artifacts": [
-        "SwapPool"
-      ]
-    },
     "/Users/masudashouta/ethereum/waffle-tutorial/contracts/Greeter.sol": {
       "lastModificationDate": 1604751713777,
       "sourceName": "contracts/Greeter.sol",
@@ -528,8 +378,43 @@
         "Greeter"
       ]
     },
+    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/BasicToken.sol": {
+      "lastModificationDate": 1604800475064,
+      "sourceName": "contracts/BasicToken.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.6.12"
+      ],
+      "artifacts": [
+        "BasicToken"
+      ]
+    },
     "/Users/masudashouta/ethereum/waffle-tutorial/contracts/RToken.sol": {
-      "lastModificationDate": 1604748534380,
+      "lastModificationDate": 1604800426006,
       "sourceName": "contracts/RToken.sol",
       "solcConfig": {
         "version": "0.6.12",
@@ -557,10 +442,158 @@
         "@openzeppelin/contracts/token/ERC20/ERC20.sol"
       ],
       "versionPragmas": [
-        "^0.6.0"
+        "^0.6.12"
       ],
       "artifacts": [
         "RToken"
+      ]
+    },
+    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/Periphery.sol": {
+      "lastModificationDate": 1604800420219,
+      "sourceName": "contracts/Periphery.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./libraries/TransferHelper.sol",
+        "./interfaces/IWETH.sol",
+        "./interfaces/IFactory.sol",
+        "./interfaces/ISwapPool.sol",
+        "./SwapPool.sol",
+        "./RToken.sol"
+      ],
+      "versionPragmas": [
+        "^0.6.12"
+      ],
+      "artifacts": [
+        "Periphery"
+      ]
+    },
+    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/SwapPool.sol": {
+      "lastModificationDate": 1604800431154,
+      "sourceName": "contracts/SwapPool.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./RToken.sol",
+        "./libraries/TransferHelper.sol",
+        "./interfaces/ISwapPool.sol",
+        "@openzeppelin/contracts/math/SafeMath.sol"
+      ],
+      "versionPragmas": [
+        "^0.6.12"
+      ],
+      "artifacts": [
+        "SwapPool"
+      ]
+    },
+    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/Factory.sol": {
+      "lastModificationDate": 1604800405159,
+      "sourceName": "contracts/Factory.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./SwapPool.sol",
+        "./interfaces/ISwapPool.sol",
+        "./interfaces/IFactory.sol"
+      ],
+      "versionPragmas": [
+        "^0.6.12"
+      ],
+      "artifacts": [
+        "Factory"
+      ]
+    },
+    "/Users/masudashouta/ethereum/waffle-tutorial/contracts/tests/WETH9.sol": {
+      "lastModificationDate": 1604800384460,
+      "sourceName": "contracts/tests/WETH9.sol",
+      "solcConfig": {
+        "version": "0.6.12",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.6.12"
+      ],
+      "artifacts": [
+        "WETH9"
       ]
     }
   }

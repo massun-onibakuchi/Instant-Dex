@@ -10,7 +10,7 @@ async function main() {
     const factory = await Factory.deploy();
     await factory.deployed();
 
-    const WETH = await ethers.getContractFactory("WETH");
+    const WETH = await ethers.getContractFactory("WETH9");
     const weth = await WETH.deploy();
     await weth.deployed();
 
@@ -18,13 +18,7 @@ async function main() {
     const transferLib = await TransferHelper.deploy();
     await transferLib.deployed();
 
-    const Periphery = await ethers.getContractFactory("Periphery",
-        {
-            libraries: {
-                TransferHelper: transferLib.address
-            }
-        });
-
+    const Periphery = await ethers.getContractFactory("Periphery");
     const periphery = await Periphery.deploy([weth.address, factory.address]);
     await periphery.deployed();
 

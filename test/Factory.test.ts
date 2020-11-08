@@ -3,10 +3,10 @@ import { waffle, ethers } from "hardhat";
 import { Contract, Signer } from "ethers";
 const { deployContract, link } = waffle;
 const privier = waffle.provider;
-import BasicToken from '../artifacts/contracts/BasicToken.sol/BasicToken.json';
 import Factory from '../artifacts/contracts/Factory.sol/Factory.json';
 import Periphery from '../artifacts/contracts/Periphery.sol/Periphery.json';
 import TransferHelper from '../artifacts/contracts/libraries/TransferHelper.sol/TransferHelper.json';
+import BasicToken from '../artifacts/contracts/BasicToken.sol/BasicToken.json';
 
 
 describe('BasicToken', () => {
@@ -21,11 +21,8 @@ describe('BasicToken', () => {
   beforeEach(async () => {
     const [owner, addr1] = await ethers.getSigners();
     let accounts: Signer[] = await ethers.getSigners();
+    
     token = await deployContract(wallet, BasicToken, [1000]);
-
-    const BasicToken = await ethers.getContractFactory("BasicToken");
-    token = await BasicToken.deploy(1000);
-
 
     factory = await deployContract(wallet, Factory, []);
 
