@@ -1,9 +1,11 @@
-import { assert, expect } from 'chai';
-import { waffle, ethers } from "hardhat";
-import { Contract } from "ethers";
-import { BytesLike, getCreate2Address, hexZeroPad, isAddress, keccak256, solidityKeccak256 } from 'ethers/lib/utils';
+import { expect } from 'chai';
+import { waffle} from "hardhat";
+import { Contract } from "ethers";  
+import { BytesLike, getCreate2Address, keccak256, solidityKeccak256 } from 'ethers/lib/utils';
 
 import SwapPool from '../artifacts/contracts/SwapPool.sol/SwapPool.json';
+import { getContractFactory } from '@nomiclabs/hardhat-ethers/dist/src/helpers';
+
 describe('Factory', () => {
   const provider = waffle.provider;
   const [wallet, walletTo] = provider.getWallets();
@@ -26,6 +28,7 @@ describe('Factory', () => {
     weth = await WETH.deploy();
     await weth.deployed();
 
+
     // const TransferHelper = await ethers.getContractFactory("TransferHelper");
     // transferLib = await TransferHelper.deploy();
     // await transferLib.deployed();
@@ -37,36 +40,22 @@ describe('Factory', () => {
     // await periphery.deployed();
   });
 
-  it('getCreationCode:  bytescode and salt equals to expected ones ', () => {
-    const testToken = token.address;
-    factory.getCreationCode(testToken)
-      .then((res) => {
-        const [bytescode, salt, ...rest] = res;
-        assert(keccak256(bytescode) == keccak256(SwapPool.bytecode),"Wrong bytecode ")
-        assert(salt == solidityKeccak256(["address"], [testToken]),"wrong salt ")
-      })
-  });
-
   it('Create Pool', async () => {
     const testToken = token.address;
     const salt = solidityKeccak256(["address"], [testToken]); // keccak256(solidityPack(["address"], [testToken]));
-    const initCodeHash = solidityKeccak256(["bytes"], [SwapPool.bytecode]); // keccak256(salt)
+    const initCodeHash = solidityKeccak256(["bytes"], [SwapPool.bytecode]); // keccak256(bytescode)
     const create2Address = getCreate2Address(factory.address, salt, initCodeHash)
 
     await expect(factory.createPool(testToken)).to.emit(factory, 'PoolCreated')
       .withArgs(testToken, create2Address);
   });
 
-  it('CreatePool :Can not create pool with zero address ', async () => {
-    const zeroAddress = hexZeroPad("0x0", 20);
-    // console.log('zeroAddress :>> ',isAddress(zeroAddress));
-    await expect(factory.createPool(zeroAddress)).to.be.reverted;
-  });
-
-  it('CreatePool :Can not create pool with the same token twice', async () => {
+  it('getCreationCode', () => {
     const testToken = token.address;
-    await factory.createPool(testToken);
-    await expect(factory.createPool(testToken)).to.be.reverted;
+    factory.creationCode(testToken)
+      .then((bytescode: BytesLike, salt: any, ...rest: any) => {
+        expect(keccak256(bytescode)).to.equal(keccak256(SwapPool.bytecode))
+      })
   });
 
   it('getPool', async () => {
@@ -75,6 +64,17 @@ describe('Factory', () => {
     const contract = await factory.getPool(testToken);
     Promise.resolve(() => expect(pool).to.equal(contract));
   });
+
+  it('CreatePool :Can not create pool with the same token twice', async () => {
+    const testToken = token.address;
+    await factory.createPool(testToken);
+    await expect(factory.createPool(testToken)).to.be.reverted;
+  });
+
+  it('CreatePool :Can not create pool with zero address ', async () => {
+    await expect(factory.createPool("")).to.be.reverted;
+  });
+
   // it('Transfer emits event', async () => {
   //   await expect(token.transfer(walletTo.address, 7))
   //     .to.emit(token, 'Transfer')

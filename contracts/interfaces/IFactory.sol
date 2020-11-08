@@ -7,4 +7,6 @@ interface IFactory {
     function createPool(address _token) external returns (address pool);
 
     function getPool(address _token) external view returns (address pair);
+
+    function getCreationCode(address _token) external view returns (bytes memory  bytecode, bytes32 salt);
 }

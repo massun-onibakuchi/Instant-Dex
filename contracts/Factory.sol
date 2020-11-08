@@ -16,6 +16,7 @@ contract Factory is IFactory {
         override
         returns (address pool)
     {
+        require(_token != address(0), "ZERO_ADDRESS");
         require(tokenToPool[_token] == address(0), "POOL_EXIST");
         bytes32 salt = keccak256(abi.encodePacked(_token));
         pool = address(new SwapPool{salt: salt}());
@@ -31,5 +32,15 @@ contract Factory is IFactory {
         returns (address pool)
     {
         pool = tokenToPool[_token];
+    }
+
+    function getCreationCode(address _token)
+        external
+        override
+        view
+        returns (bytes memory bytecode, bytes32 salt)
+    {
+        bytecode = type(SwapPool).creationCode;
+        salt = keccak256(abi.encodePacked(_token));
     }
 }
