@@ -7,6 +7,7 @@ import Factory from '../artifacts/contracts/Factory.sol/Factory.json';
 import Periphery from '../artifacts/contracts/Periphery.sol/Periphery.json';
 import TransferHelper from '../artifacts/contracts/libraries/TransferHelper.sol/TransferHelper.json';
 import BasicToken from '../artifacts/contracts/BasicToken.sol/BasicToken.json';
+import WETH9 from '../artifacts/contracts/tests/WETH9.sol/WETH9.json';
 
 
 describe('BasicToken', () => {
@@ -15,27 +16,28 @@ describe('BasicToken', () => {
   let transferLib: Contract;
   let factory: Contract;
   let periphery: Contract;
-  let swappool: Contract;
+  let weth: Contract;
 
 
   beforeEach(async () => {
     const [owner, addr1] = await ethers.getSigners();
     let accounts: Signer[] = await ethers.getSigners();
-    
+
     token = await deployContract(wallet, BasicToken, [1000]);
+    await token.deployed();
+
+    weth = await deployContract(wallet, WETH9, []);
+    await weth.deployed();
+    
+    transferLib = await deployContract(wallet, TransferHelper, []);
+    await transferLib.deployed();
 
     factory = await deployContract(wallet, Factory, []);
+    await factory.deployed();
 
-    transferLib = await deployContract(wallet, TransferHelper, []);
-
-    link(Periphery, 'contracts/Periphery.sol:Periphery', transferLib.address);
-    periphery = await deployContract(wallet, Periphery, []);
-    
-    // const BasicToken = await ethers.getContractFactory("BasicToken");
-    // token = await BasicToken.deploy(1000);
-    // const BasicToken = await ethers.getContractFactory("BasicToken");
-    // token = await BasicToken.deploy(1000);
-  });
+    periphery = await deployContract(wallet, Periphery,);
+    await periphery.deployed();
+    });
 
   it('Assigns initial balance', async () => {
     expect(await token.balanceOf(wallet.address)).to.equal(1000);

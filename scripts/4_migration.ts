@@ -19,10 +19,8 @@ async function main() {
     await transferLib.deployed();
 
     const Periphery = await ethers.getContractFactory("Periphery");
-    const periphery = await Periphery.deploy([weth.address, factory.address]);
+    const periphery = await Periphery.deploy(weth.address, factory.address);
     await periphery.deployed();
-
-
 
 }
 
