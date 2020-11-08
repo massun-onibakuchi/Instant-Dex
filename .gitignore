@@ -3,3 +3,5 @@ node_modules
 flatten
 artifacts
 cache
+pure-hardhat
+waffle
