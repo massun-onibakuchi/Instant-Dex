@@ -13,21 +13,21 @@ async function main() {
   // manually to make sure everything is compiled
   // await hre.run('compile');
 
-  // We get the contract to deploy
-  const Factory = await hre.ethers.getContractFactory("Factory");
-  const factory = await Factory.deploy();
-  const factoryAddr = (await factory.deployed()).address;
+  // // We get the contract to deploy
+  // const Factory = await hre.ethers.getContractFactory("Factory");
+  // const factory = await Factory.deploy();
+  // const factoryAddr = (await factory.deployed()).address;
 
-  const Periphery = await hre.ethers.getContractFactory("Periphery");
-  const periphery = await Periphery.deploy(wethAddr, factoryAddr);
-  await Periphery.deployed();
+  // const Periphery = await hre.ethers.getContractFactory("Periphery");
+  // const periphery = await Periphery.deploy(wethAddr, factoryAddr);
+  // await Periphery.deployed();
 
-  // const SwapPool = await hre.ethers.getContractFactory("SwapPool");
-  // const swapPool = await SwapPool.deploy();
-  // await SwapPool.deployed();
+  // // const SwapPool = await hre.ethers.getContractFactory("SwapPool");
+  // // const swapPool = await SwapPool.deploy();
+  // // await SwapPool.deployed();
 
-  console.log("Factory deployed to:", factory.address);
-  console.log("Periphery deployed to:", periphery.address);
+  // console.log("Factory deployed to:", factory.address);
+  // console.log("Periphery deployed to:", periphery.address);
   // console.log("SwapPool deployed to:", swapPool.address);
 }
 
