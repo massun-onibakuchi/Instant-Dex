@@ -1,174 +1,95 @@
 import { expect } from 'chai';
-import { waffle, ethers } from "hardhat";
-import { Contract, Signer } from "ethers";
-import { getCreate2Address, solidityKeccak256 } from 'ethers/lib/utils';
-import SwapPool from '../artifacts/contracts/SwapPool.sol/SwapPool.json';
-import BasicToken from '../artifacts/contracts/BasicToken.sol/BasicToken.json';
-import Factory from '../artifacts/contracts/Factory.sol/Factory.json';
+import { waffle } from "hardhat";
+import { Contract } from "ethers";
+import { poolFixture } from './utilities/fixture';
+import { zeroAddress } from './utilities/utils';
 
-const { deployContract, } = waffle;
+describe('SwapPool', async () => {
+  const provider = waffle.provider;
+  const [wallet, other] = provider.getWallets();
+  const loadFixture = waffle.createFixtureLoader([wallet], provider)
 
-const provider = waffle.provider;
-const [wallet, other] = provider.getWallets();
-
-const loadFixture = waffle.createFixtureLoader([wallet], provider)
-
-async function fixture([wallet, other], provider) {
-  const token = await deployContract(wallet, BasicToken, [
-    wallet.address, 1000
-  ]);
-  const factory = await deployContract(wallet, Factory);
-  await factory.createPool(token.address);
-  const poolAddress = await factory.getPool(token.address)
-  const pool = new Contract(poolAddress, JSON.stringify(SwapPool.abi), provider).connect(wallet)
-  return { factory, token, pool }
-}
-
-
-describe('BasicToken', async () => {
-  // const [wallet, walletTo] = provider.getWallets();
-  let accounts: Signer[] = await ethers.getSigners();
   let token: Contract;
   let factory: Contract;
-  let weth: Contract;
-  let transferLib: Contract;
-  let periphery: Contract;
   let pool: Contract;
-
   beforeEach(async () => {
-    const BasicToken = await ethers.getContractFactory("BasicToken", accounts[0]);
-    token = await BasicToken.deploy(1000);
-    await token.deployed();
+    const fixture = await loadFixture(poolFixture)
+    factory = fixture.factory
+    token = fixture.token
+    pool = fixture.pool
 
-    const Factory = await ethers.getContractFactory("Factory");
-    factory = await Factory.deploy();
-    await factory.deployed();
-
-    const WETH = await ethers.getContractFactory("WETH9");
-    weth = await WETH.deploy();
-    await weth.deployed();
-
-    const TransferHelper = await ethers.getContractFactory("TransferHelper");
-    transferLib = await TransferHelper.deploy();
-    await transferLib.deployed();
+    // const TransferHelper = await ethers.getContractFactory("TransferHelper");
+    // transferLib = await TransferHelper.deploy();
+    // await transferLib.deployed();
 
     // const Periphery = await ethers.getContractFactory("Periphery");
     // periphery = await Periphery.deploy(weth.address, factory.address);
     // await periphery.deployed();
-
-    const testToken = token.address;
-    const salt = solidityKeccak256(["address"], [testToken]); // keccak256(solidityPack(["address"], [testToken]));
-    const initCodeHash = solidityKeccak256(["bytes"], [SwapPool.bytecode]); // keccak256(salt)
-    const create2Address = getCreate2Address(factory.address, salt, initCodeHash);
-
-    await factory.createPool(testToken);
-    pool = await ethers.getContractAt("SwapPool", create2Address, accounts[0])
-
   });
 
-  it('transfer: rToken', async () => {
-    await token.transfer(pool.address, 7);
-    expect(await pool.mint(accounts[0])).to.equal(7);
-    await pool.transfer(accounts[1], 4)
-    expect(await pool.balanceOf(accounts[0])).to.equal(3);
-    expect(await pool.balanceOf(accounts[1])).to.equal(4);
+  it('mint: emit multiple events', async () => {
+    const amount = 10
+    await token.transfer(pool.address, amount);
+
+    await expect(pool.mint(wallet.address))
+      .to.emit(pool.address, 'Transfer')
+      .withArgs(zeroAddress, wallet.address, amount)
+      .to.emit(pool.address, 'Sync')
+      .withArgs(amount)
+      .to.emit(pool.address, 'Mint')
+      .withArgs(wallet.address, token.address)
   });
 
-  it('mint: emit Sync event ', async () => {
-    await token.transfer(pool.address, 7);
-    await expect(pool.mint(accounts[0]))
-      .to.emit(pool, 'Sync')
-      .withArgs(7);
+  it('mint: adds and sub amount', async () => {
+    const amount = 10
+    const expextedLiquidity = amount;
+    await token.transfer(pool.address, amount);
+    await pool.mint(wallet.address)
+
+    expect(await pool.totalSupply()).to.equal(expextedLiquidity)
+    expect(await pool.balanceOf(wallet.address)).to.equal(expextedLiquidity)
+    expect(await token.balanceOf(pool.address)).to.equal(amount)
+    const reserves = await pool.getReserve()
+    expect(reserves).to.equal(amount)
   });
 
-  it('mint: adds amount to destination account', async () => {
-    await token.transfer(pool.address, 7);
-    expect(await token.balanceOf(pool.address)).to.equal(7);
-    expect(await pool.mint(accounts[0])).to.equal(7);
-    expect(await pool.balanceOf(accounts[0])).to.equal(7);
+  async function addLiquidity(tokenAmount: number) {
+    await token.transfer(pool.address, tokenAmount)
+    await pool.mint(wallet.address)
+  }
+
+  it('burn:emit multiple event', async () => {
+    const amount = 10
+    const expectedLiquidity = amount;
+    const tokenAmount = 100
+    await addLiquidity(tokenAmount)
+
+    await pool.transfer(pool.address, expectedLiquidity);
+
+    await expect(pool.burn(wallet.address))
+      .to.emit(pool.address, 'Transfer')
+      .withArgs(wallet.address, zeroAddress, amount)
+      // .to.emit(token, 'Transfer')
+      // .withArgs(pool.address, wallet.address, amount)
+      .to.emit(pool.address, 'Sync')
+      .withArgs(amount)
+      .to.emit(pool.address, 'Burn')
+      .withArgs(wallet.address, 7);
   });
 
-  it('mint:emit Mint event', async () => {
-    await token.transfer(pool.address, 7);
-    await expect(pool.mint(accounts[1]))
-      .to.emit(pool, 'Mint')
-      .withArgs(accounts[0], 7);
+  it('burn: adds and sub amount', async () => {
+    const amount = 100
+    const expectedLiquidity = amount;
+    // add Liquidity and minted to rToken.
+    await addLiquidity(expectedLiquidity)
+
+    // transfer rToken to pool and burn
+    await pool.transfer(pool.address, expectedLiquidity);
+    await pool.burn(wallet.address);
+
+    expect(await pool.balanceOf(wallet.address)).to.eq(0)
+    expect(await pool.totalSupply()).to.eq(0)
+    expect(await token.balanceOf(pool.address)).to.eq(0)
+    expect(await token.balanceOf(wallet.address)).to.eq(1000)
   });
-
-  it('burn: adds amount to destination account', async () => {
-    await token.transfer(pool.address, 7);
-    await pool.burn(accounts[0])
-    expect(await token.balanceOf(pool.address)).to.equal(7);
-    expect(await pool.burn(accounts[1])).to.equal(7);
-    expect(await pool.balanceOf(accounts[1])).to.equal(7);
-  });
-
-  it('burn:emit Burn event', async () => {
-    await token.transfer(pool.address, 7);
-    await pool.mint(accounts[0], 7);
-    await expect(pool.burn(accounts[0]))
-      .to.emit(pool, 'Burn')
-      .withArgs(accounts[0], 7);
-  });
-
-  it('burn: emit Sync event ', async () => {
-    await token.transfer(pool.address, 7);
-    await pool.mint(accounts[0]);
-    await expect(pool.burn(accounts[1]))
-      .to.emit(pool, 'Sync')
-      .withArgs(0);
-  });
-
-
-  // it('swap', async () => {
-  //   await token.transfer(walletTo.address, 7);
-  //   expect(await token.balanceOf(walletTo.address)).to.equal(7);
-  // });
-
-
-  // it('Can not transfer above the amount', async () => {
-  //   await expect(token.transfer(walletTo.address, 1007)).to.be.reverted;
-  // });
-
-  // it('Can not transfer from empty account', async () => {
-  //   const tokenFromOtherWallet = token.connect(walletTo);
-  //   await expect(tokenFromOtherWallet.transfer(wallet.address, 1))
-  //     .to.be.reverted;
-  // });
-
-  // it('Assigns initial balance', async () => {
-  //   expect(await token.balanceOf(wallet.address)).to.equal(1000);
-  // });
-
-  // it('Transfer adds amount to destination account', async () => {
-  //   await token.transfer(walletTo.address, 7);
-  //   expect(await token.balanceOf(walletTo.address)).to.equal(7);
-  // });
-
-  // it('Transfer emits event', async () => {
-  //   await expect(token.transfer(walletTo.address, 7))
-  //     .to.emit(token, 'Transfer')
-  //     .withArgs(wallet.address, walletTo.address, 7);
-  // });
-
-  // it('Can not transfer above the amount', async () => {
-  //   await expect(token.transfer(walletTo.address, 1007)).to.be.reverted;
-  // });
-
-  // it('Can not transfer from empty account', async () => {
-  //   const tokenFromOtherWallet = token.connect(walletTo);
-  //   await expect(tokenFromOtherWallet.transfer(wallet.address, 1))
-  //     .to.be.reverted;
-  // });
-
-
-  // it('Calls totalSupply on BasicToken contract', async () => {
-  //   await token.totalSupply();
-  //   expect('totalSupply').to.be.calledOnContract(token);
-  // });
-
-  // it('Calls balanceOf with sender address on BasicToken contract', async () => {
-  //   await token.balanceOf(wallet.address);
-  //   expect('balanceOf').to.be.calledOnContractWith(token, [wallet.address]);
-  // });
-});
+})
