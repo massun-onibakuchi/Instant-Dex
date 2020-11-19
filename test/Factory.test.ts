@@ -1,5 +1,5 @@
 import { assert, expect } from 'chai';
-import { waffle, ethers } from "hardhat";
+import { ethers } from "hardhat";
 import { Contract, } from "ethers";
 import { getCreate2Address, hexZeroPad, keccak256, solidityKeccak256 } from 'ethers/lib/utils';
 import SwapPool from '../artifacts/contracts/SwapPool.sol/SwapPool.json';
@@ -19,23 +19,21 @@ describe('Factory', () => {
   });
 
   it('getCreationCode:  bytescode and salt equals to expected ones ', () => {
-    const testToken = token.address;
-    factory.getCreationCode(testToken)
+    factory.getCreationCode(token.address)
       .then((res) => {
         const [bytescode, salt, ...rest] = res;
         assert(keccak256(bytescode) == keccak256(SwapPool.bytecode), "Wrong bytecode ")
-        assert(salt == solidityKeccak256(["address"], [testToken]), "wrong salt ")
+        assert(salt == solidityKeccak256(["address"], [token.address]), "wrong salt ")
       })
   });
 
   it('Create Pool', async () => {
-    const testToken = token.address;
-    const salt = solidityKeccak256(["address"], [testToken]); // keccak256(solidityPack(["address"], [testToken]));
+    const salt = solidityKeccak256(["address"], [token.address]); // keccak256(solidityPack(["address"], [token.address]));
     const initCodeHash = solidityKeccak256(["bytes"], [SwapPool.bytecode]); // keccak256(salt)
     const create2Address = getCreate2Address(factory.address, salt, initCodeHash)
 
-    await expect(factory.createPool(testToken)).to.emit(factory, 'PoolCreated')
-      .withArgs(testToken, create2Address);
+    await expect(factory.createPool(token.address)).to.emit(factory, 'PoolCreated')
+      .withArgs(token.address, create2Address);
   });
 
   it('CreatePool :Can not create pool with zero address ', async () => {
@@ -45,29 +43,26 @@ describe('Factory', () => {
   });
 
   it('CreatePool :Can not create pool with the same token twice', async () => {
-    const testToken = token.address;
-    await factory.createPool(testToken);
-    await expect(factory.createPool(testToken)).to.be.reverted;
+    await factory.createPool(token.address);
+    await expect(factory.createPool(token.address)).to.be.reverted;
   });
 
-  
+
   it('CreatePool: Call token and factory getter on created SwapPool contract', async () => {
-    const testToken = token.address;
-    const salt = solidityKeccak256(["address"], [testToken]); // keccak256(solidityPack(["address"], [testToken]));
+    const salt = solidityKeccak256(["address"], [token.address]); // keccak256(solidityPack(["address"], [token.address]));
     const initCodeHash = solidityKeccak256(["bytes"], [SwapPool.bytecode]); // keccak256(salt)
     const create2Address = getCreate2Address(factory.address, salt, initCodeHash);
-    await factory.createPool(testToken);
-    
+    await factory.createPool(token.address);
+
     // const pool = new Contract(create2Address, JSON.stringify(SwapPool.abi), provider)
     const pool = await ethers.getContractAt("SwapPool", create2Address)
-    expect(await pool.token()).to.equal(testToken)
+    expect(await pool.token()).to.equal(token.address)
     expect(await pool.factory()).to.equal(factory.address)
   });
-  
+
   it('getPool: Call getPool on Factory contract', async () => {
-    const testToken = token.address;
-    const pool = await factory.createPool(testToken);
-    const contract = await factory.getPool(testToken);
+    const pool = await factory.createPool(token.address);
+    const contract = await factory.getPool(token.address);
     Promise.resolve(() => expect(pool).to.equal(contract));
   });
 });

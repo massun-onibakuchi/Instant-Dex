@@ -3,12 +3,30 @@ import { waffle, ethers } from "hardhat";
 import { Contract, Signer } from "ethers";
 import { getCreate2Address, solidityKeccak256 } from 'ethers/lib/utils';
 import SwapPool from '../artifacts/contracts/SwapPool.sol/SwapPool.json';
+import BasicToken from '../artifacts/contracts/BasicToken.sol/BasicToken.json';
+import Factory from '../artifacts/contracts/Factory.sol/Factory.json';
 
-const privier = waffle.provider;
+const { deployContract, } = waffle;
+
+const provider = waffle.provider;
+const [wallet, other] = provider.getWallets();
+
+const loadFixture = waffle.createFixtureLoader([wallet], provider)
+
+async function fixture([wallet, other], provider) {
+  const token = await deployContract(wallet, BasicToken, [
+    wallet.address, 1000
+  ]);
+  const factory = await deployContract(wallet, Factory);
+  await factory.createPool(token.address);
+  const poolAddress = await factory.getPool(token.address)
+  const pool = new Contract(poolAddress, JSON.stringify(SwapPool.abi), provider).connect(wallet)
+  return { factory, token, pool }
+}
 
 
 describe('BasicToken', async () => {
-  // const [wallet, walletTo] = privier.getWallets();
+  // const [wallet, walletTo] = provider.getWallets();
   let accounts: Signer[] = await ethers.getSigners();
   let token: Contract;
   let factory: Contract;
@@ -69,12 +87,12 @@ describe('BasicToken', async () => {
     expect(await pool.mint(accounts[0])).to.equal(7);
     expect(await pool.balanceOf(accounts[0])).to.equal(7);
   });
-  
+
   it('mint:emit Mint event', async () => {
     await token.transfer(pool.address, 7);
     await expect(pool.mint(accounts[1]))
-    .to.emit(pool, 'Mint')
-    .withArgs(accounts[0], 7);
+      .to.emit(pool, 'Mint')
+      .withArgs(accounts[0], 7);
   });
 
   it('burn: adds amount to destination account', async () => {
@@ -84,7 +102,7 @@ describe('BasicToken', async () => {
     expect(await pool.burn(accounts[1])).to.equal(7);
     expect(await pool.balanceOf(accounts[1])).to.equal(7);
   });
-  
+
   it('burn:emit Burn event', async () => {
     await token.transfer(pool.address, 7);
     await pool.mint(accounts[0], 7);
