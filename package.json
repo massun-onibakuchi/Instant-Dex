@@ -10,7 +10,8 @@
     "migrate": "hardhat run",
     "test": "hardhat test",
     "tsc": "./node_modules/.bin/tsc ",
-    "lint:sol": "./node_modules/solhint/solhint.js \"contracts/**/*.sol\" "
+    "lint:sol": "./node_modules/solhint/solhint.js \"contracts/**/*.sol\" ",
+    "lint:ts": "eslint ./node_modules/eslint/bin/eslint.js \"test/*.ts\" "
   },
   "author": "",
   "license": "ISC",
@@ -30,6 +31,8 @@
     "@typechain/ethers-v5": "^4.0.0",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.3",
+    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/parser": "^4.8.1",
     "hardhat-typechain": "^0.3.3",
     "solhint": "^3.3.1",
     "ts-generator": "^0.1.1",
