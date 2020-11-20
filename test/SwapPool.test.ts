@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { waffle } from "hardhat";
+import { waffle,ethers } from "hardhat";
 import { Contract } from "ethers";
 import { poolFixture } from './utilities/fixture';
 import { zeroAddress } from './utilities/utils';
@@ -9,8 +9,8 @@ describe('SwapPool', async () => {
   const [wallet, other] = provider.getWallets();
   const loadFixture = waffle.createFixtureLoader([wallet], provider)
 
-  let token: Contract;
   let factory: Contract;
+  let token: Contract;
   let pool: Contract;
   beforeEach(async () => {
     const fixture = await loadFixture(poolFixture)
@@ -61,8 +61,7 @@ describe('SwapPool', async () => {
   it('burn:emit multiple event', async () => {
     const amount = 10
     const expectedLiquidity = amount;
-    const tokenAmount = 100
-    await addLiquidity(tokenAmount)
+    await addLiquidity(amount)
 
     await pool.transfer(pool.address, expectedLiquidity);
 
@@ -81,8 +80,7 @@ describe('SwapPool', async () => {
     const amount = 100
     const expectedLiquidity = amount;
     // add Liquidity and minted to rToken.
-    await addLiquidity(expectedLiquidity)
-
+    await addLiquidity(amount)
     // transfer rToken to pool and burn
     await pool.transfer(pool.address, expectedLiquidity);
     await pool.burn(wallet.address);

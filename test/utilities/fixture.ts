@@ -1,4 +1,4 @@
-import { waffle,ethers } from "hardhat";
+import { waffle, ethers } from "hardhat";
 import { Contract } from "ethers";
 
 import SwapPool from '../../artifacts/contracts/SwapPool.sol/SwapPool.json';
@@ -18,6 +18,8 @@ export async function poolFixture([wallet, other], provider): Promise<PoolFixtur
     const factory = await deployContract(wallet, Factory);
     await factory.createPool(token.address);
     const poolAddress = await factory.getPool(token.address);
+    // const pool = await ethers.getContractAt(SwapPool.abi, poolAddress, wallet);
+    // const pool = new ethers.Contract(poolAddress, JSON.stringify(SwapPool.abi), provider).connect(wallet)
     const pool = new Contract(poolAddress, JSON.stringify(SwapPool.abi), provider).connect(wallet)
     return { factory, token, pool }
 }
