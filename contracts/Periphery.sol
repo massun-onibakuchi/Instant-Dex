@@ -28,7 +28,7 @@ contract Periphery {
         uint256 amount
     ) external returns (uint256 liquidity) {
         // address pool = IFactory(factory).getPool(token);
-        address pool = poolFor(factory, WETH);
+        address pool = poolFor(factory, token);
         require(pool != address(0), "INVALID_TOKEN_ADDRESS");
 
         TransferHelper.safeTransferFrom(token, msg.sender, pool, amount);

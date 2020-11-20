@@ -45,17 +45,25 @@ export async function poolFixture([wallet, other], provider): Promise<PoolFixtur
 }
 
 export async function peripheryFixture([wallet, other], provider): Promise<PeripheryFixture> {
-    const { factory: factory, token: basicToken, pool: basicPool } = await poolFixture(wallet, provider)
+    const basicToken = (await deployContract(wallet, BasicTokenArtifact, [1000])) as BasicToken;
+    const factory = (await deployContract(wallet, FactoryArtifact)) as Factory;
+    await factory.createPool(basicToken.address);
 
-    const weth = (await deployContract(wallet, WETHArtifact, [1000])) as WETH;
-    await factory.createPool(weth.address);
-    const poolAddress = await factory.getPool(weth.address);
-    const wethPool = (new Contract(poolAddress,
+    const basicPool = (new Contract(
+        await factory.getPool(basicToken.address),
         JSON.stringify(SwapPoolArtifact.abi),
         provider
     ).connect(wallet)) as SwapPool;
 
-    const periphery = (await deployContract(wallet, PeripheryArtifact, [factory.address, weth.address])) as Periphery
+    const weth = (await deployContract(wallet, WETHArtifact)) as WETH;
+    await factory.createPool(weth.address);
+    const wethPool = (new Contract(
+        await factory.getPool(weth.address),
+        JSON.stringify(SwapPoolArtifact.abi),
+        provider
+    ).connect(wallet)) as SwapPool;
+
+    const periphery = (await deployContract(wallet, PeripheryArtifact, [weth.address, factory.address])) as Periphery
 
     return { factory, basicToken, weth, basicPool, wethPool, periphery }
 }
