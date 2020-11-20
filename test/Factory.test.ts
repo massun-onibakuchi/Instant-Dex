@@ -9,7 +9,6 @@ import FactoryArtifact from '../artifacts/contracts/Factory.sol/Factory.json';
 
 import { BasicToken } from "../typechain/BasicToken";
 import { Factory } from "../typechain/Factory";
-import { SwapPool } from '../typechain/SwapPool';
 
 describe('Factory', () => {
   const { deployContract } = waffle;
