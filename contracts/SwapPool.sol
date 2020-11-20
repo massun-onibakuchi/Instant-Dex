@@ -73,7 +73,6 @@ contract SwapPool is ISwapPool, RToken {
         uint256 amount = balance.sub(_reserve);
 
         /* 小数の計算 */
-        //ここではliquidity =  amount とする
         liquidity = amount;
         require(liquidity > 0, "INSUFFICIENT_LIQUIDITY_MINTED");
 
@@ -92,6 +91,7 @@ contract SwapPool is ISwapPool, RToken {
         /* 小数の計算 */
 
         amount = liquidity;
+        
         require(amount > 0, "INSUFFICIENT_LIQUIDITY_BURNED");
         _burn(address(this), liquidity);
         _safeTransfer(token, to, amount);

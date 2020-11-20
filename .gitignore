@@ -5,3 +5,4 @@ artifacts
 cache
 pure-hardhat
 waffle
+typechain/*

@@ -1,6 +1,7 @@
 import { task } from "hardhat/config";
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-ethers";
+import "hardhat-typechain";
 import { HardhatUserConfig } from "hardhat/config";
 
 const PROJECT_ID = "";
