@@ -1,5 +1,5 @@
 # Simplified Token Trade Contract
-Extremely simpilified Uniswap-like contract
+Extremely simpilified Uniswap-based contract
 
 ## Contracts
 ***Factory***   

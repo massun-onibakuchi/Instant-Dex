@@ -4,10 +4,14 @@ import { Contract } from "ethers";
 import SwapPoolArtifact from '../../artifacts/contracts/SwapPool.sol/SwapPool.json';
 import BasicTokenArtifact from '../../artifacts/contracts/BasicToken.sol/BasicToken.json';
 import FactoryArtifact from '../../artifacts/contracts/Factory.sol/Factory.json';
+import WETHArtifact from '../../artifacts/contracts/tests/WETH9.sol/WETH9.json';
+import PeripheryArtifact from '../../artifacts/contracts/Periphery.sol/Periphery.json';
 
 import { SwapPool } from "../../typechain/SwapPool";
 import { BasicToken } from "../../typechain/BasicToken";
 import { Factory } from "../../typechain/Factory";
+import { Periphery } from "../../typechain/Periphery";
+import { WETH9 as WETH } from "../../typechain/WETH9";
 
 const { deployContract } = waffle;
 
@@ -15,6 +19,15 @@ interface PoolFixture {
     factory: Factory
     token: BasicToken
     pool: SwapPool
+}
+
+interface PeripheryFixture {
+    factory: Factory
+    basicToken: BasicToken
+    weth: WETH
+    basicPool: SwapPool
+    wethPool: SwapPool
+    periphery: Periphery
 }
 
 export async function poolFixture([wallet, other], provider): Promise<PoolFixture> {
@@ -29,4 +42,20 @@ export async function poolFixture([wallet, other], provider): Promise<PoolFixtur
         provider
     ).connect(wallet)) as SwapPool;
     return { factory, token, pool }
+}
+
+export async function peripheryFixture([wallet, other], provider): Promise<PeripheryFixture> {
+    const { factory: factory, token: basicToken, pool: basicPool } = await poolFixture(wallet, provider)
+
+    const weth = (await deployContract(wallet, WETHArtifact, [1000])) as WETH;
+    await factory.createPool(weth.address);
+    const poolAddress = await factory.getPool(weth.address);
+    const wethPool = (new Contract(poolAddress,
+        JSON.stringify(SwapPoolArtifact.abi),
+        provider
+    ).connect(wallet)) as SwapPool;
+
+    const periphery = (await deployContract(wallet, PeripheryArtifact, [factory.address, weth.address])) as Periphery
+
+    return { factory, basicToken, weth, basicPool, wethPool, periphery }
 }
