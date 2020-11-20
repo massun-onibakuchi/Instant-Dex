@@ -33,7 +33,9 @@
     "@types/mocha": "^8.0.3",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
+    "eslint-config-prettier": "^6.15.0",
     "hardhat-typechain": "^0.3.3",
+    "prettier": "^2.2.0",
     "solhint": "^3.3.1",
     "ts-generator": "^0.1.1",
     "typechain": "^4.0.0"
