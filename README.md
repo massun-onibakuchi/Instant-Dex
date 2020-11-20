@@ -3,10 +3,10 @@ Extremely simpilified Uniswap-like contract
 
 ## Contracts
 ***Factory***   
-The Factory contract to create ***SwapPool*** contracts. This contract create new pools specific to ERC20 token.
+The Factory contract to create *SwapPool* contracts. This contract create new pools specific to ERC20 token.
 
 ***SwapPool***      
-The Pool contract. This contract mint liquidity token *RToken* to liquidity provider, also burn and send tokens.
+The Pool contract. This contract mints liquidity token *RToken* to liquidity provider, also burns and sends tokens.
 
 ***Periphery***   
 User interacts the *Periphery* contract instead of calling Factory or SwapPool Contract directly. This contract interact with other contracts. 
@@ -16,6 +16,7 @@ User interacts the *Periphery* contract instead of calling Factory or SwapPool C
 
 ## Typechain
 If you want to create Typechain artifacts for ethers v5,run:
+
 `npm run typechain`
 
 ## Testing
