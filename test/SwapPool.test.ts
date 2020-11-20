@@ -47,6 +47,7 @@ describe('SwapPool', async () => {
     expect(await pool.totalSupply()).to.equal(expectedLiquidity)
     expect(await pool.balanceOf(wallet.address)).to.equal(expectedLiquidity)
     expect(await token.balanceOf(pool.address)).to.equal(amount)
+    expect(await token.balanceOf(wallet.address)).to.equal(1000-amount)
     expect(await pool.getReserve()).to.equal(amount)
   });
 
