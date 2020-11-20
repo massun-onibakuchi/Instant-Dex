@@ -5,15 +5,14 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended",
-        "prettier/@typescript-eslint"
+        "plugin:@typescript-eslint/recommended"
+        // "plugin:prettier/recommended"
+        // "prettier/@typescript-eslint"
     ],
+    "parser": "@typescript-eslint/parser",
     "plugins": [
         "@typescript-eslint"
     ],
-    "parser": "@typescript-eslint/parser",
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
@@ -21,6 +20,6 @@
     "parserOptions": {
         "ecmaVersion": 2019
     },
-    "rules": {
-    }
+    "root": true,
+    "rules": {}
 }
