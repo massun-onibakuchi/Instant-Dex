@@ -1,38 +1,43 @@
 import { assert, expect } from 'chai';
-import { ethers } from "hardhat";
-import { Contract, } from "ethers";
+import { ethers, waffle } from "hardhat";
 import { getCreate2Address, keccak256, solidityKeccak256 } from 'ethers/lib/utils';
 import { zeroAddress } from './utilities/utils';
-import SwapPool from '../artifacts/contracts/SwapPool.sol/SwapPool.json';
+
+import SwapPoolArtifact from '../artifacts/contracts/SwapPool.sol/SwapPool.json';
+import BasicTokenArtifact from '../artifacts/contracts/BasicToken.sol/BasicToken.json';
+import FactoryArtifact from '../artifacts/contracts/Factory.sol/Factory.json';
+
+import { BasicToken } from "../typechain/BasicToken";
+import { Factory } from "../typechain/Factory";
+import { SwapPool } from '../typechain/SwapPool';
 
 describe('Factory', () => {
-  let token: Contract;
-  let factory: Contract;
+  const { deployContract } = waffle;
+  const provider = waffle.provider;
+  const [wallet, other] = provider.getWallets();
 
+  let token: BasicToken;
+  let factory: Factory;
   beforeEach(async () => {
-    const BasicToken = await ethers.getContractFactory("BasicToken");
-    token = await BasicToken.deploy(1000);
-    await token.deployed();
-
-    const Factory = await ethers.getContractFactory("Factory");
-    factory = await Factory.deploy();
-    await factory.deployed();
+    token = (await deployContract(wallet, BasicTokenArtifact, [1000])) as BasicToken;
+    factory = (await deployContract(wallet, FactoryArtifact)) as Factory;
   });
 
-  it('getCreationCode:  bytescode and salt equals to expected ones ', () => {
-    factory.getCreationCode(token.address)
-      .then((res) => {
-        const [bytescode, salt, ...rest] = res;
-        assert(keccak256(bytescode) == keccak256(SwapPool.bytecode), "Wrong bytecode ")
-        assert(salt == solidityKeccak256(["address"], [token.address]), "wrong salt ")
-      })
-  });
+  it('getCreationCode: bytescode and salt equals to expected ones ', async () => {
+    const { bytecode, salt } = await factory.getCreationCode(token.address);
+    assert(keccak256(bytecode) == keccak256(SwapPoolArtifact.bytecode), "Wrong bytecode ")
+    assert(salt == solidityKeccak256(["address"], [token.address]), "wrong salt ")
+  })
+
+  function createPoolAddress(tokenAddress: string, poolArtifact: typeof SwapPoolArtifact) {
+    const salt = solidityKeccak256(["address"], [tokenAddress]); // keccak256(solidityPack(["address"], [token.address]));
+    const initCodeHash = solidityKeccak256(["bytes"], [poolArtifact.bytecode]); // keccak256(salt)
+    const create2Address = getCreate2Address(factory.address, salt, initCodeHash)
+    return create2Address
+  }
 
   it('Create Pool', async () => {
-    const salt = solidityKeccak256(["address"], [token.address]); // keccak256(solidityPack(["address"], [token.address]));
-    const initCodeHash = solidityKeccak256(["bytes"], [SwapPool.bytecode]); // keccak256(salt)
-    const create2Address = getCreate2Address(factory.address, salt, initCodeHash)
-
+    const create2Address = createPoolAddress(token.address, SwapPoolArtifact);
     await expect(factory.createPool(token.address)).to.emit(factory, 'PoolCreated')
       .withArgs(token.address, create2Address);
   });
@@ -47,10 +52,8 @@ describe('Factory', () => {
   });
 
 
-  it('CreatePool: Call token and factory getter on created SwapPool contract', async () => {
-    const salt = solidityKeccak256(["address"], [token.address]); // keccak256(solidityPack(["address"], [token.address]));
-    const initCodeHash = solidityKeccak256(["bytes"], [SwapPool.bytecode]); // keccak256(salt)
-    const create2Address = getCreate2Address(factory.address, salt, initCodeHash);
+  it('CreatePool: Call token and factory getter on created SwapPoolArtifact contract', async () => {
+    const create2Address = createPoolAddress(token.address, SwapPoolArtifact);
     await factory.createPool(token.address);
 
     // const pool = new Contract(create2Address, JSON.stringify(SwapPool.abi), provider)
@@ -60,11 +63,8 @@ describe('Factory', () => {
   });
 
   it('getPool: Call getPool on Factory contract', async () => {
-    const pool = await factory.createPool(token.address);
-    const expectedPool = await factory.getPool(token.address);
-    // const contract = await factory.getPool(token.address);
-    console.log('expectedPool :>> ', expectedPool);
-    console.log('pool :>> ', pool);
-    assert(pool == expectedPool, "Unexpected pool address")
+    const create2Address = createPoolAddress(token.address, SwapPoolArtifact);
+    await factory.createPool(token.address);
+    expect(await factory.getPool(token.address)).to.eq(create2Address);
   });
 });
