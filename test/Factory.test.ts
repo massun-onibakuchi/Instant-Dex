@@ -22,7 +22,7 @@ describe('Factory', () => {
     factory = (await deployContract(wallet, FactoryArtifact)) as Factory;
   });
 
-  it('getCreationCode: bytescode and salt equals to expected ones ', async () => {
+  it('getCreationCode: Bytescode and salt equals to expected ones ', async () => {
     const { bytecode, salt } = await factory.getCreationCode(token.address);
     assert(keccak256(bytecode) == keccak256(SwapPoolArtifact.bytecode), "Wrong bytecode ")
     assert(salt == solidityKeccak256(["address"], [token.address]), "wrong salt ")
@@ -35,7 +35,7 @@ describe('Factory', () => {
     return create2Address
   }
 
-  it('Create Pool', async () => {
+  it('Create Pool: Emit event', async () => {
     const create2Address = createPoolAddress(token.address, SwapPoolArtifact);
     await expect(factory.createPool(token.address)).to.emit(factory, 'PoolCreated')
       .withArgs(token.address, create2Address);
@@ -49,7 +49,6 @@ describe('Factory', () => {
     await factory.createPool(token.address);
     await expect(factory.createPool(token.address)).to.be.reverted;
   });
-
 
   it('CreatePool: Call token and factory getter on created SwapPoolArtifact contract', async () => {
     const create2Address = createPoolAddress(token.address, SwapPoolArtifact);

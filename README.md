@@ -8,6 +8,9 @@ The Factory contract to create *SwapPool* contracts. This contract create new po
 ***SwapPool***      
 The Pool contract. This contract mints liquidity token *RToken* to liquidity provider, also burns and sends tokens.
 
+***RToken***      
+The ERC20-compatible liquidity token.
+
 ***Periphery***   
 User interacts the *Periphery* contract instead of calling Factory or SwapPool Contract directly. This contract interact with other contracts. 
 
@@ -15,7 +18,7 @@ User interacts the *Periphery* contract instead of calling Factory or SwapPool C
 `npm install ` 
 
 ## Typechain
-If you want to create Typechain artifacts for ethers v5,run:
+If you want to create Typechain artifacts for ethers v5, run:
 
 `npm run typechain`
 

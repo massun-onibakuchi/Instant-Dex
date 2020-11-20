@@ -22,14 +22,6 @@ describe('SwapPool', async () => {
     factory = fixture.factory
     token = fixture.token
     pool = fixture.pool
-
-    // const TransferHelper = await ethers.getContractFactory("TransferHelper");
-    // transferLib = await TransferHelper.deploy();
-    // await transferLib.deployed();
-
-    // const Periphery = await ethers.getContractFactory("Periphery");
-    // periphery = await Periphery.deploy(weth.address, factory.address);
-    // await periphery.deployed();
   });
 
   it('mint: emit multiple events', async () => {
@@ -46,7 +38,7 @@ describe('SwapPool', async () => {
       .withArgs(wallet.address, expectedLiquidity)
   });
 
-  it('mint: adds and sub amount', async () => {
+  it('mint: add and sub amount', async () => {
     const amount = 10
     const expectedLiquidity = 10;
     await token.transfer(pool.address, amount);
@@ -66,8 +58,9 @@ describe('SwapPool', async () => {
   it('burn:emit multiple event', async () => {
     const amount = 10
     const expectedLiquidity = 10;
+    // add Liquidity and mint rToken.
     await addLiquidity(amount)
-
+    // transfer rToken to pool and burn
     await pool.transfer(pool.address, expectedLiquidity);
 
     await expect(pool.burn(wallet.address))
@@ -79,10 +72,10 @@ describe('SwapPool', async () => {
       .withArgs(wallet.address, expectedLiquidity);
   });
 
-  it('burn: adds and sub amount', async () => {
+  it('burn: add and sub amount', async () => {
     const amount = 100
     const expectedLiquidity = 100;
-    // add Liquidity and minted to rToken.
+    // add Liquidity and mint rToken.
     await addLiquidity(amount)
     // transfer rToken to pool and burn
     await pool.transfer(pool.address, expectedLiquidity);
