@@ -1,5 +1,5 @@
 {
-    "require": "ts-node/register/files",
-    "timeout": 20000,
-    "mochaExplorer.files": "test/**/*.ts"
+    "mochaExplorer.require": "hardhat/register",
+    "mochaExplorer.files": "test/**/*.ts",
+    "mochaExplorer.timeout": 20000
 }

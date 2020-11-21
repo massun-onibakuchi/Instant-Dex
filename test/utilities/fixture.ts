@@ -46,8 +46,10 @@ export async function poolFixture([wallet, other], provider): Promise<PoolFixtur
 
 export async function peripheryFixture([wallet, other], provider): Promise<PeripheryFixture> {
     const basicToken = (await deployContract(wallet, BasicTokenArtifact, [1000])) as BasicToken;
+    const weth = (await deployContract(wallet, WETHArtifact)) as WETH;
     const factory = (await deployContract(wallet, FactoryArtifact)) as Factory;
     await factory.createPool(basicToken.address);
+    await factory.createPool(weth.address);
 
     const basicPool = (new Contract(
         await factory.getPool(basicToken.address),
@@ -55,8 +57,6 @@ export async function peripheryFixture([wallet, other], provider): Promise<Perip
         provider
     ).connect(wallet)) as SwapPool;
 
-    const weth = (await deployContract(wallet, WETHArtifact)) as WETH;
-    await factory.createPool(weth.address);
     const wethPool = (new Contract(
         await factory.getPool(weth.address),
         JSON.stringify(SwapPoolArtifact.abi),

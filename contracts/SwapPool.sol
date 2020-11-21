@@ -62,6 +62,11 @@ contract SwapPool is ISwapPool, RToken {
         token = _token;
     }
 
+    /**
+     * mint loquidity token to specified address.
+     * this function don't check sufficiently
+     * @param to recipient of the liquidity token
+     */
     function mint(address to)
         external
         override
@@ -81,6 +86,11 @@ contract SwapPool is ISwapPool, RToken {
         emit Mint(msg.sender, amount);
     }
 
+    /**
+     * burn loquidity token and send asset to specified address.
+     * this function don't check sufficiently
+     * @param to recipient of the asset.
+     */
     function burn(address to) external override lock returns (uint256 amount) {
         // uint112 _reserve = getReserve();
         address _token = token; // gas savings
@@ -89,9 +99,8 @@ contract SwapPool is ISwapPool, RToken {
         uint256 liquidity = balanceOf(address(this));
 
         /* 小数の計算 */
-
         amount = liquidity;
-        
+
         require(amount > 0, "INSUFFICIENT_LIQUIDITY_BURNED");
         _burn(address(this), liquidity);
         _safeTransfer(token, to, amount);

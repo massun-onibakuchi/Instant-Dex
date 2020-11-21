@@ -22,6 +22,12 @@ contract Periphery {
         assert(msg.sender == WETH);
     }
 
+    /**
+     * Add liquidity to pool.
+     * @param token ERC20-compatible token address
+     * @param to recipient of the liquidity token
+     * @param amount amounts of token that caller wants to add
+     */
     function addLiquidity(
         address token,
         address to,
@@ -35,6 +41,11 @@ contract Periphery {
         liquidity = ISwapPool(pool).mint(to);
     }
 
+    /**
+     * Add liquidity to ETH pool.
+     * Specify amount of ETH in msg.value
+     * @param to recipient of the liquidity token
+     */
     function addLiquidityETH(address to)
         external
         payable
@@ -49,30 +60,43 @@ contract Periphery {
         liquidity = ISwapPool(pool).mint(to);
     }
 
+    /**
+     * Remove liquidity and return token to a specified address
+     * @param token ERC20-compatible token address
+     * @param to recipient of the removed liquidity
+     * @param liquidity amount of removed liquidity
+     */
     function removeLiquidity(
         address token,
         address to,
-        uint256 amount
-    ) external returns (uint256 liquidity) {
+        uint256 liquidity
+    ) public returns (uint256 amount) {
         address pool = poolFor(factory, token);
         require(pool != address(0), "INVALID_TOKEN_ADDRESS");
 
-        ISwapPool(pool).transferFrom(msg.sender, pool, amount);
-        liquidity = ISwapPool(pool).burn(to);
+        ISwapPool(pool).transferFrom(msg.sender, pool, liquidity);
+        amount = ISwapPool(pool).burn(to);
     }
 
-    function removeLiquidityETH(address to, uint256 amountETH)
+    /**
+     * Remove ETH liqudity (WETH) and return ETH to a specified address
+     * @param to recipient of the removed liquidity
+     * @param liquidity amount of removed liquidity
+     */
+    function removeLiquidityETH(address to, uint256 liquidity)
         external
-        returns (uint256 liquidity)
+        returns (uint256 amountETH)
     {
-        address pool = poolFor(factory, WETH);
-        require(pool != address(0), "INVALID_TOKEN_ADDRESS");
-
+        amountETH = removeLiquidity(WETH, address(this), liquidity);
         IWETH(WETH).withdraw(amountETH);
         TransferHelper.safeTransferETH(to, amountETH);
-        liquidity = ISwapPool(pool).burn(to);
     }
 
+    /**
+     * Calculate pool address with create2Address
+     * @param _factory factory contract address
+     * @param _token ERC20 address
+     */
     function poolFor(address _factory, address _token)
         private
         pure
