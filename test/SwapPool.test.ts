@@ -6,7 +6,6 @@ import { zeroAddress } from './utilities/utils';
 import { SwapPool } from "../typechain/SwapPool";
 import { BasicToken } from "../typechain/BasicToken";
 import { Factory } from "../typechain/Factory";
-import { poll } from 'ethers/lib/utils';
 
 describe('SwapPool', async () => {
   const INITIAL_LIQUIDITY = 0;

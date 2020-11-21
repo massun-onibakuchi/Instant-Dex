@@ -2,13 +2,14 @@
 pragma solidity ^0.6.12;
 
 import "./libraries/TransferHelper.sol";
+import "./interfaces/IPeriphery.sol";
 import "./interfaces/IWETH.sol";
 import "./interfaces/IFactory.sol";
 import "./interfaces/ISwapPool.sol";
 import "./SwapPool.sol";
 import "./RToken.sol";
 
-contract Periphery {
+contract Periphery is IPeriphery {
     address public immutable WETH;
     address public immutable factory;
 
@@ -32,7 +33,7 @@ contract Periphery {
         address token,
         address to,
         uint256 amount
-    ) external returns (uint256 liquidity) {
+    ) external override returns (uint256 liquidity) {
         // address pool = IFactory(factory).getPool(token);
         address pool = poolFor(factory, token);
         require(pool != address(0), "INVALID_TOKEN_ADDRESS");
@@ -48,6 +49,7 @@ contract Periphery {
      */
     function addLiquidityETH(address to)
         external
+        override
         payable
         returns (uint256 liquidity)
     {
@@ -70,7 +72,7 @@ contract Periphery {
         address token,
         address to,
         uint256 liquidity
-    ) public returns (uint256 amount) {
+    ) public override returns (uint256 amount) {
         address pool = poolFor(factory, token);
         require(pool != address(0), "INVALID_TOKEN_ADDRESS");
 
@@ -85,6 +87,7 @@ contract Periphery {
      */
     function removeLiquidityETH(address to, uint256 liquidity)
         external
+        override
         returns (uint256 amountETH)
     {
         amountETH = removeLiquidity(WETH, address(this), liquidity);

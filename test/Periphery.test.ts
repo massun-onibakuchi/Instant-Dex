@@ -1,15 +1,13 @@
 import { expect } from 'chai';
 import { waffle } from "hardhat";
-import { peripheryFixture, poolFixture } from './utilities/fixture';
-import { zeroAddress } from './utilities/utils';
+import { Contract } from 'ethers';
+import { peripheryFixture } from './utilities/fixture';
 
 import { SwapPool } from "../typechain/SwapPool";
 import { BasicToken } from "../typechain/BasicToken";
 import { Factory } from "../typechain/Factory";
 import { Periphery } from '../typechain/Periphery';
-import { WETH9 as WETH, WETH9 } from '../typechain/WETH9';
-import { Contract } from 'ethers';
-import { poll } from 'ethers/lib/utils';
+import { WETH9 as WETH } from '../typechain/WETH9';
 
 const overrides = {
   gasLimit: 9500000
@@ -64,7 +62,7 @@ describe('Periphery: basic function', async () => {
     expect(await basicPool.balanceOf(other.address)).to.eq(expectedLiquidity)
   });
 
-  it('removeLiquidity: remove liquidity to destination account', async () => {
+  it('removeLiquidity: remove liquidity and sent to destination account', async () => {
     const amount = 10;
     await addLiquidity(basicToken, wallet.address, amount)
     await removeLiquidity(basicPool, basicToken, other.address, amount)
@@ -92,7 +90,7 @@ describe('Periphery: basic function', async () => {
     expect(await wethPool.balanceOf(other.address)).to.eq(expectedLiquidity)
   });
 
-  it('removeLiquidityETH: remove eth liquidity to destination account', async () => {
+  it('removeLiquidityETH: remove eth liquidity to send destination account', async () => {
     const ethAmount = 10;
     const initialEthBalance = await provider.getBalance(other.address);
 
